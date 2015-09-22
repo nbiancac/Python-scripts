@@ -1,0 +1,91 @@
+!--------------------------------------------------------------------------
+! MAD file for SPS optics calculations
+!  G.Arduini
+!--------------------------------------------------------------------------
+
+option, -echo;
+option, RBARC=FALSE;  
+!assign, ECHO=ECHO.PRT; 
+!system, "ln -fns /afs/cern.ch/user/r/rtomas/w1/MAD/SPS ds";  
+system, "ln -fns /afs/cern.ch/user/n/nbiancac/madx/ ds";
+
+!----- SPECIFY THE SPS CONFIGURATION, ENERGY and EMITTANCES
+!call, file = "ds/beams/LHC_beam_injection.beamx";
+call, file = "LHC_beam_injection.beamx";
+
+!---- call the element definition file for SPS
+call, file = "ds/elements/sps2008.ele";
+call, file = "ds/strength/elements.str";
+call, file = "ds/strength/lhc_newwp_2008.str";
+call, file = "ds/sequence/sps2008New.seq";
+use, period=sps, range=#s/#e;
+
+!--------------------------------------------------------------------------
+! calculates strengths from currents
+!--------------------------------------------------------------------------
+! call, filename = 'W:\\cmd\\currenttoK.cmd'
+
+!##########################################
+!  qui si include il file di matching
+! NON TOCCARE!!!!
+!  
+!
+!##########################################
+use, sequence=SPS, range=#S/#E;
+call, file ='matchtune_hdtl.cmdx';
+!endmatch;
+
+!--- to compare values with Detection software
+select,flag=twiss,clear;
+select,flag=twiss, pattern="BPH.*", column=name, s, mux, muy;
+twiss,sequence=sps, file=bph.base;
+
+!--- to compare values with Detection software
+select,flag=twiss,clear;
+select,flag=twiss, pattern="BPV.*", column=name, s, mux, muy;
+twiss,sequence=sps, file=bpv.base;
+
+option, echo,warn,verify;
+call,file="changeparametersM";
+
+!--- to compare values with Detection software
+select,flag=twiss,clear;
+select,flag=twiss, pattern="BPH.*", column=name, s, mux, muy;
+twiss,sequence=sps, file=bph.dat;
+
+!--- to compare values with Detection software
+select,flag=twiss,clear;
+select,flag=twiss, pattern="BPV.*", column=name, s, mux, muy;
+twiss,sequence=sps, file=bpv.dat;
+
+
+USE, period=SPS, range=#S/#E;
+select, flag=twiss,clear;
+select, flag=twiss, column=name,s,muy,betx,alfy,bety, mux, alfx,dmuy,dmux;
+twiss, deltap = 0.000, chrom, save, centre ,file=machinelattice.txt;
+
+
+
+
+!--------------------------------------------------------------------------
+! to get the SPS non-linear model
+!--------------------------------------------------------------------------
+! changeparameters inside the following file
+!call, file = 'nonlinear_model.cmdx';
+!call, file='tunes4mad.madx';
+!call, file='current';
+!select, flag=twiss, pattern=LS*, column=name,s,muy,betx,alfy,bety, mux, alfx;
+!twiss,save, centre ,file=sps_latticename.txt;
+!MAKETHIN, sequence=sps;
+!use, sequence=sps;
+!twiss,save, centre ,file=sps_lattice.txt;
+!use, sequence=sps;
+!set,format="17.14g";
+!ptc_create_Universe;
+
+!PTC_CREATE_LAYOUT, model=2,method=2, nst=1, exact;
+!ptc_start, x=0.0001, px=0.0000, y=0.0, py=0.00, t =0.0,pt =0.0;
+!ptc_TRACK, dump, icase=4, file=phase.dat, turns=200;
+!ptc_END_TRACK;
+
+stop;
