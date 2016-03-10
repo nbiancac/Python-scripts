@@ -1,6 +1,0 @@
-
-set term postscript
-set output 'phase_beating.ps'
-p "H_madx.dat" u 2:3
-rep "V_madx.dat" u 2:3
-pause -1

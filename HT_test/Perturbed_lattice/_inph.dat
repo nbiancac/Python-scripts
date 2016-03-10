@@ -1,9 +1,0 @@
-Longitudinal matching number: 1.000071 
-WARNING: If longitudinal matching number is not about 1,
-the bunch is not matched to the bucket !!!!! 
-electrons = 2  protons = 50000  bunch slices = 100
-electron sizes -> sx = 0  sy = 0
-beam sizes     -> sx = 0.00335234  sy = 0.0014983
-e- cloud sizes -> rpipex = 0.0335234  rpipey = 0.014983
-maximum tune shifts -> dt_x = 0.00789983  dt_y = 0.0394717
-Percent of beam loss -> 0 

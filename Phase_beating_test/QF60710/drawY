@@ -1,7 +1,0 @@
-
-p "phase_beating.dat" u 2
-rep "phase_advance.dat" u 2
-set term postscript
-set output 'phase_beating_y.ps'
-replot
-pause -1
